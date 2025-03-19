@@ -10,34 +10,116 @@ import blackArrow from '../assets/images/home/black-arrow.svg';
 import whiteArrow from '../assets/images/home/white-arrow.svg';
 import clsx from 'clsx';
 import { useScreenResize } from '../hooks/useScreenResize';
+import { useCities } from '../hooks/useCities';
+import { createPortal } from 'react-dom';
+import { Input, Transition } from '@headlessui/react';
+import { useState } from 'react';
+import { City, defaultCity } from '../types/city';
 
 export default function Home() {
+    const [showCityList, setShowCityList] = useState(false);
+    const [currentCity, setCurrentCity] = useState<City>(defaultCity);
     const isLarge = useScreenResize();
 
-    const bgImage = isLarge ?  hero : mobileHero;
+    const bgImage = isLarge ? hero : mobileHero;
+
+    function openCityList() {
+        setShowCityList(true);
+    }
+
+    function closeCityList() {
+        setShowCityList(false);
+    }
+
+    function selectCity(city: City) {
+        setCurrentCity(city);
+    }
+
     return (
-        <div
-            className="min-h-screen relative bg-cover bg-no-repeat bg-center px-10 md:px-28"
-            style={{ backgroundImage: `url(${bgImage})` }}
-        >
-            <HomePageOverlay />
+        <>
+            <div
+                className="min-h-screen relative bg-cover bg-no-repeat bg-center px-10 md:px-28"
+                style={{ backgroundImage: `url(${bgImage})` }}
+            >
+                <HomePageOverlay />
 
-            <div className="relative z-20 mb-63 sm:mb-0 sm:pb-40 md:pb-10">
-                <HomePageHeader />
+                <div className="relative z-20 mb-63 sm:mb-0 sm:pb-40 md:pb-10">
+                    <HomePageHeader open={openCityList} currentCity={currentCity.ru_name}  />
 
-                <HeroLayout />
+                    <HeroLayout />
+                </div>
+
+                <HeroTextSection className="sm:hidden text-black-20" />
+
+                <div className="hidden md:block md:pb-10">
+                    <img
+                        src={whiteArrow}
+                        alt="white arrow"
+                        className="hidden md:block md:mx-auto"
+                    />
+                </div>
             </div>
 
-            <HeroTextSection className="sm:hidden" />
+            {createPortal(
+                <SelectCityModal show={showCityList} close={closeCityList} select={selectCity} />,
+                document.getElementById('modals')!
+            )}
+        </>
+    );
+}
 
-            <div className="hidden md:block md:pb-10">
-                <img
-                    src={whiteArrow}
-                    alt="white arrow"
-                    className="hidden md:block md:mx-auto"
-                />
+type SelectCityModalProps = {
+    show: boolean;
+    close: () => void;
+    select: (city: City) => void;
+};
+
+function SelectCityModal({ show, close, select }: SelectCityModalProps) {
+    const { data: cities, isLoading, isError } = useCities();
+
+   /*  if (isLoading) return <p className="text-white">Loading cities...</p>;
+    if (isError) return <p className="text-white">Failed to fetch cities.</p>; */
+
+    return (
+        <Transition show={show}>
+        <div
+            className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-5 transition duration-300 ease-in data-[closed]:opacity-0'
+            style={{ backdropFilter: 'blur(10px)' }}
+        >
+            <div className="bg-white max-w-127 w-full rounded-2xl p-4 text-black-20 h-149 overflow-y-clip">
+                <header className="flex items-start mb-3">
+                    <p className="text-xl font-bold text-center ml-auto">
+                        Выберите город
+                    </p>
+                    <button onClick={close} className="ml-auto cursor-pointer text-xl relative">
+                        &times;
+                        <span className="absolute inset-0 size-8 -translate-x-1/2"></span>
+                    </button>
+                </header>
+
+                <div className="relative focus-within:border-double focus-within:border-3 hover:shadow-xl w-full border border-black-20 py-2 px-4 rounded-md flex items-center justify-between shadow-sm gap-2 mb-3">
+                    <Input
+                        type="search"
+                        placeholder="Ваш город"
+                        className="-mb-1 flex-1 shadow-none outline-none"
+                    />
+                    <MagnifyingGlassIcon className="size-6" />
+                </div>
+
+                <ul className="px-5 space-y-4">
+                    {cities?.map(
+                        (city: {
+                            id: number;
+                            name: string;
+                            ru_name: string;
+                        }) => (
+                            <li key={city.id} onClick={() => select(city)}>{city.ru_name}</li>
+                        )
+                    )}
+                </ul>
             </div>
         </div>
+        </Transition>
     );
 }
 
@@ -53,24 +135,32 @@ function HomePageOverlay() {
     );
 }
 
-function HomePageHeader() {
+type HomePageHeaderProps = {
+    open: () => void;
+    currentCity: string;
+};
+
+function HomePageHeader({ open, currentCity }: HomePageHeaderProps) {
     return (
         <header className="py-12 md:pt-30 md:pb-12 text-gray-50">
             <nav>
                 <ul className="flex items-center justify-around sm:justify-between">
-                    <li className="btn-primary bg-gray-30 border-gray-20">
+                    <li className="btn-primary bg-gray-30 border-gray-20 cursor-pointer">
                         <GlobeEuropeAfricaIcon className="size-4.5 shrink-0" />
-                        <button className="uppercase cursor-pointer -mb-1">
-                            Москва
+                        <button
+                            onClick={open}
+                            className="uppercase cursor-pointer -mb-1"
+                        >
+                            {currentCity}
                         </button>
                     </li>
-                    <li className="btn-primary bg-yellow-50 border-yellow-20 absolute -bottom-15 sm:static">
+                    <li className="btn-primary bg-yellow-50 border-yellow-20 absolute -bottom-15 sm:static cursor-pointer">
                         <Link to="/" className="uppercase cursor-pointer -mb-1">
                             Мойка рядом
                         </Link>
                         <MagnifyingGlassIcon className="size-4.5 shrink-0" />
                     </li>
-                    <li className="btn-primary bg-gray-30 border-gray-20">
+                    <li className="btn-primary bg-gray-30 border-gray-20 cursor-pointer">
                         <Link
                             to="/login"
                             className="uppercase cursor-pointer -mb-1"

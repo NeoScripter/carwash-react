@@ -15,6 +15,7 @@
     --color-gray-50: oklch(44.95% 0 0);
     --color-yellow-50: oklch(80.57% 0.16758 78.6389);
     --color-yellow-20: oklch(61.39% 0.1272 79.85);
+    --color-black-20: oklch(28.09% 0 0);
 
     --gradient-home: linear-gradient(
         173deg,
