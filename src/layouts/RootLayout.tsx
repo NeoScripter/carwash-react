@@ -4,7 +4,7 @@ export function RootLayout() {
     return (
         <>
             <ScrollRestoration />
-            <div className="container">
+            <div className='mx-auto max-w-[1728px]'>
                 <Outlet />
             </div>
         </>

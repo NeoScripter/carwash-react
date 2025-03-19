@@ -1,19 +1,32 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @theme {
-    --font-sans: "Actay", "system-ui", "sans-serif";
+    --font-sans: 'Actay', 'system-ui', 'sans-serif';
 
     --breakpoint-sm: 48.75rem;
     --breakpoint-md: 90rem;
     --breakpoint-xl: 108rem;
 
-
     --color-white-50: oklch(94.61% 0 0);
     --color-slate-70: oklch(23.08% 0 0);
     --color-gray-10: oklch(79.52% 0 0 / 48%);
+    --color-gray-20: oklch(76.68% 0 0);
     --color-gray-30: oklch(88.53% 0 0);
     --color-gray-50: oklch(44.95% 0 0);
+    --color-yellow-50: oklch(80.57% 0.16758 78.6389);
+    --color-yellow-20: oklch(61.39% 0.1272 79.85);
 
-    --gradient-home: linear-gradient(173deg, rgba(11,11,11,0.6783963585434174) 43%, rgba(255,255,255,1) 100%, rgba(255,255,255,0) 100%);
+    --gradient-home: linear-gradient(
+        173deg,
+        rgba(11, 11, 11, 0.6783963585434174) 20%,
+        rgba(255, 255, 255, 1) 100%
+    );
+
+    --shadow-logo: inset -3px -3px 0px rgba(255, 255, 255, 0.7),
+        inset 3px 3px 0px rgba(0, 0, 0, 0.7);
     /* ... */
-  }
+}
+
+.btn-primary {
+    @apply w-max border flex items-center gap-2 py-1.5 px-4 rounded-full transition-colors duration-300 hover:opacity-90;
+}
