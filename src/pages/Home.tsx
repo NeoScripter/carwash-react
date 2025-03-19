@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import {
     GlobeEuropeAfricaIcon,
     MagnifyingGlassIcon,
+    CheckCircleIcon,
 } from '@heroicons/react/24/solid';
 import hero from '../assets/images/home/home-hero.webp';
 import mobileHero from '../assets/images/home/hero-mobile.webp';
@@ -44,7 +45,10 @@ export default function Home() {
                 <HomePageOverlay />
 
                 <div className="relative z-20 mb-63 sm:mb-0 sm:pb-40 md:pb-10">
-                    <HomePageHeader open={openCityList} currentCity={currentCity.ru_name}  />
+                    <HomePageHeader
+                        open={openCityList}
+                        currentCity={currentCity.ru_name}
+                    />
 
                     <HeroLayout />
                 </div>
@@ -61,7 +65,12 @@ export default function Home() {
             </div>
 
             {createPortal(
-                <SelectCityModal show={showCityList} close={closeCityList} select={selectCity} />,
+                <SelectCityModal
+                    show={showCityList}
+                    close={closeCityList}
+                    select={selectCity}
+                    currentCityId={currentCity.id}
+                />,
                 document.getElementById('modals')!
             )}
         </>
@@ -72,54 +81,105 @@ type SelectCityModalProps = {
     show: boolean;
     close: () => void;
     select: (city: City) => void;
+    currentCityId: number;
 };
 
-function SelectCityModal({ show, close, select }: SelectCityModalProps) {
+function SelectCityModal({
+    show,
+    close,
+    select,
+    currentCityId,
+}: SelectCityModalProps) {
     const { data: cities, isLoading, isError } = useCities();
 
-   /*  if (isLoading) return <p className="text-white">Loading cities...</p>;
-    if (isError) return <p className="text-white">Failed to fetch cities.</p>; */
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const filteredCities =
+        cities?.filter((city: City) =>
+            city.ru_name.toLowerCase().includes(searchTerm.toLowerCase())
+        ) || [];
+
+    const renderCities = () => {
+        if (isLoading) return <li>Загружаем названия городов...</li>;
+        if (isError) return <li>Произошла ошибка, попробуйте позже</li>;
+        if (!filteredCities.length)
+            return <li>По вашему запросу ничего не найдено</li>;
+
+        return filteredCities.map((city: City) => (
+            <CityListItem
+                key={city.id}
+                city={city}
+                select={select}
+                isCurrent={currentCityId === city.id}
+            />
+        ));
+    };
 
     return (
         <Transition show={show}>
-        <div
-            className='fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-5 transition duration-300 ease-in data-[closed]:opacity-0'
-            style={{ backdropFilter: 'blur(10px)' }}
-        >
-            <div className="bg-white max-w-127 w-full rounded-2xl p-4 text-black-20 h-149 overflow-y-clip">
-                <header className="flex items-start mb-3">
-                    <p className="text-xl font-bold text-center ml-auto">
-                        Выберите город
-                    </p>
-                    <button onClick={close} className="ml-auto cursor-pointer text-xl relative">
-                        &times;
-                        <span className="absolute inset-0 size-8 -translate-x-1/2"></span>
-                    </button>
-                </header>
+            <div
+                onClick={close}
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-5 transition duration-300 ease-in data-[closed]:opacity-0"
+                style={{ backdropFilter: 'blur(10px)' }}
+            >
+                <div
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-white max-w-127 w-full rounded-2xl p-4 text-black-20 h-149 overflow-y-auto"
+                >
+                    <header className="flex items-start mb-3">
+                        <p className="text-xl font-bold text-center ml-auto">
+                            Выберите город
+                        </p>
+                        <button
+                            onClick={close}
+                            className="ml-auto cursor-pointer text-xl relative"
+                        >
+                            &times;
+                            <span className="absolute inset-0 size-8 -translate-x-1/2"></span>
+                        </button>
+                    </header>
 
-                <div className="relative focus-within:border-double focus-within:border-3 hover:shadow-xl w-full border border-black-20 py-2 px-4 rounded-md flex items-center justify-between shadow-sm gap-2 mb-3">
-                    <Input
-                        type="search"
-                        placeholder="Ваш город"
-                        className="-mb-1 flex-1 shadow-none outline-none"
-                    />
-                    <MagnifyingGlassIcon className="size-6" />
+                    <div className="relative focus-within:border-double focus-within:border-3 hover:shadow-xl w-full border border-black-20 py-2 px-4 rounded-md flex items-center justify-between shadow-sm gap-2 mb-6">
+                        <Input
+                            type="search"
+                            placeholder="Ваш город"
+                            className="-mb-1 flex-1 shadow-none outline-none"
+                            value={searchTerm}
+                            onChange={handleInputChange}
+                            autoFocus
+                        />
+                        <MagnifyingGlassIcon className="size-6" />
+                    </div>
+
+                    <ul className="px-5">{renderCities()}</ul>
                 </div>
-
-                <ul className="px-5 space-y-4">
-                    {cities?.map(
-                        (city: {
-                            id: number;
-                            name: string;
-                            ru_name: string;
-                        }) => (
-                            <li key={city.id} onClick={() => select(city)}>{city.ru_name}</li>
-                        )
-                    )}
-                </ul>
             </div>
-        </div>
         </Transition>
+    );
+}
+
+type CityListItemProps = {
+    city: City;
+    isCurrent?: boolean;
+    select: (city: City) => void;
+};
+
+function CityListItem({ city, isCurrent = false, select }: CityListItemProps) {
+    return (
+        <li
+            onClick={() => select(city)}
+            className={clsx(
+                'flex items-center justify-between cursor-pointer py-2 hover:underline',
+                isCurrent && 'text-xl font-bold'
+            )}
+        >
+            {city.ru_name}
+            {isCurrent && <CheckCircleIcon className="shrink-0 size-8" />}
+        </li>
     );
 }
 
@@ -144,31 +204,29 @@ function HomePageHeader({ open, currentCity }: HomePageHeaderProps) {
     return (
         <header className="py-12 md:pt-30 md:pb-12 text-gray-50">
             <nav>
-                <ul className="flex items-center justify-around sm:justify-between">
-                    <li className="btn-primary bg-gray-30 border-gray-20 cursor-pointer">
+                <div className="flex items-center justify-around sm:justify-between">
+                    <button
+                        onClick={open}
+                        className="btn-primary bg-gray-30 border-gray-20"
+                    >
                         <GlobeEuropeAfricaIcon className="size-4.5 shrink-0" />
-                        <button
-                            onClick={open}
-                            className="uppercase cursor-pointer -mb-1"
-                        >
-                            {currentCity}
-                        </button>
-                    </li>
-                    <li className="btn-primary bg-yellow-50 border-yellow-20 absolute -bottom-15 sm:static cursor-pointer">
-                        <Link to="/" className="uppercase cursor-pointer -mb-1">
-                            Мойка рядом
-                        </Link>
+
+                        {currentCity}
+                    </button>
+                    <Link
+                        to="/"
+                        className="btn-primary bg-yellow-50 border-yellow-20 absolute -bottom-15 sm:static"
+                    >
+                        Мойка рядом
                         <MagnifyingGlassIcon className="size-4.5 shrink-0" />
-                    </li>
-                    <li className="btn-primary bg-gray-30 border-gray-20 cursor-pointer">
-                        <Link
-                            to="/login"
-                            className="uppercase cursor-pointer -mb-1"
-                        >
-                            Войти
-                        </Link>
-                    </li>
-                </ul>
+                    </Link>
+                    <Link
+                        to="/login"
+                        className="btn-primary bg-gray-30 border-gray-20"
+                    >
+                        Войти
+                    </Link>
+                </div>
             </nav>
         </header>
     );

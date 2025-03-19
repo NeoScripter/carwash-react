@@ -29,5 +29,5 @@
 }
 
 .btn-primary {
-    @apply w-max border flex items-center gap-2 py-1.5 px-4 rounded-full transition-colors duration-300 hover:opacity-90;
+    @apply w-max border flex items-center gap-2 py-1.5 px-4 rounded-full transition-colors duration-300 hover:opacity-90 uppercase cursor-pointer;
 }
