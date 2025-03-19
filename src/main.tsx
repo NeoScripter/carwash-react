@@ -9,10 +9,13 @@ import { routes } from './router.tsx';
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
-
     <StrictMode>
         <QueryClientProvider client={queryClient}>
-            <RouterProvider router={createBrowserRouter(routes)} />
+            <RouterProvider
+                router={createBrowserRouter(routes, {
+                    basename: '/carwash-react/',
+                })}
+            />
         </QueryClientProvider>
     </StrictMode>
 );

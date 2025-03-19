@@ -7,5 +7,6 @@ export default defineConfig({
     build: {
         outDir: 'docs'
     },
-    base: ''
+    base: '/carwash-react/',
+    assetsInclude: ['**/*.html']
 });
