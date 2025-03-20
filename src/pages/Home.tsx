@@ -30,34 +30,33 @@ export default function Home() {
         setCurrentCity(city);
     }
 
+    const renderWhiteArrow = () => (
+        <div className="hidden md:block md:pb-10">
+            <img
+                src={whiteArrow}
+                alt="white arrow"
+                className="hidden md:block md:mx-auto"
+            />
+        </div>
+    );
+
     return (
         <>
-            <div
-                className="min-h-screen relative bg-cover bg-no-repeat bg-center px-10 md:px-28"
+            <section
+                className="min-h-screen relative bg-cover bg-no-repeat bg-center section-padding"
                 style={{ backgroundImage: `url(${bgImage})` }}
             >
                 <HeroGradientOverlay />
-
                 <div className="relative z-20 mb-63 sm:mb-0 sm:pb-40 md:pb-10">
                     <HeroNavigationBar
                         onCitySelect={openCityList}
                         currentCity={currentCity.ru_name}
                     />
-
                     <HeroSection />
                 </div>
-
-                <HeroDescription className="sm:hidden text-black-20" />
-
-                <div className="hidden md:block md:pb-10">
-                    <img
-                        src={whiteArrow}
-                        alt="white arrow"
-                        className="hidden md:block md:mx-auto"
-                    />
-                </div>
-            </div>
-
+                <HeroDescription className="sm:hidden text-black" />
+                {renderWhiteArrow()}
+            </section>
             {createPortal(
                 <CityPickerModal
                     show={showCityList}
@@ -67,6 +66,10 @@ export default function Home() {
                 />,
                 document.getElementById('modals')!
             )}
+
+            <section className='section-padding'>
+
+            </section>
         </>
     );
 }

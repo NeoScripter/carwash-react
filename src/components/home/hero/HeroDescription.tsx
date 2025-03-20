@@ -10,7 +10,7 @@ export default function HeroDescription({ className }: HeroDescriptionProps) {
     return (
         <div
             className={clsx(
-                'mx-10 text-balance pb-10 text-xl flex items-center',
+                'mx-4 text-balance pb-10 text-xl flex items-center',
                 className
             )}
         >

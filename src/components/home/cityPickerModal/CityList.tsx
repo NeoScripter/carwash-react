@@ -1,6 +1,15 @@
 import { City } from '../../../types/city';
 import CityListItem from './CityListItem';
 
+type CityListProps = {
+    cities: City[] | undefined;
+    searchTerm: string;
+    select: (city: City) => void;
+    currentCityId: number;
+    isLoading: boolean;
+    isError: boolean;
+};
+
 export default function CityList({
     cities,
     searchTerm,
@@ -8,14 +17,7 @@ export default function CityList({
     currentCityId,
     isLoading,
     isError,
-}: {
-    cities: City[] | undefined;
-    searchTerm: string;
-    select: (city: City) => void;
-    currentCityId: number;
-    isLoading: boolean;
-    isError: boolean;
-}) {
+}: CityListProps) {
     if (isLoading) return <li>Загружаем названия городов...</li>;
     if (isError) return <li>Произошла ошибка, попробуйте позже</li>;
 
