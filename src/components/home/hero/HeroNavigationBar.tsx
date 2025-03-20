@@ -1,8 +1,8 @@
 import {
     GlobeEuropeAfricaIcon,
-    MagnifyingGlassIcon,
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router';
+import FindCarwashBtn from '../../shared/FindCarwashBtn';
 
 type HeroNavigationBarProps = {
     onCitySelect: () => void;
@@ -25,13 +25,7 @@ export default function HeroNavigationBar({
 
                         {currentCity}
                     </button>
-                    <Link
-                        to="/"
-                        className="btn-primary bg-yellow-50 border-yellow-20 absolute -bottom-15 sm:static"
-                    >
-                        Мойка рядом
-                        <MagnifyingGlassIcon className="size-4.5 shrink-0" />
-                    </Link>
+                    <FindCarwashBtn className='absolute -bottom-15 sm:static' />
                     <Link
                         to="/login"
                         className="btn-primary bg-gray-30 border-gray-20"
