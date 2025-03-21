@@ -48,7 +48,8 @@ export default function IntroCarousel() {
         isError,
     } = useCarwashes(currentCity.name);
 
-    if (isError || !carwashes) return <div>Error loading carwashes</div>;
+    if (isLoading) return <div>Загружаем данные по автомойкам</div>;
+    if (isError || !carwashes) return <div>Произошла ошибка, попробуйте позже</div>;
 
     const totalSlides = carwashes?.length || 0;
     const swipeThreshold = 50;
@@ -124,7 +125,6 @@ export default function IntroCarousel() {
                         rating={4}
                         name={carwash.name}
                         address={carwash.location}
-                        isLoading={isLoading}
                     />
                 ))}
             </div>
