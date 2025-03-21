@@ -2,16 +2,15 @@ import { useState } from 'react';
 import CarwashCard from './CarwashCard';
 /* import { carwashData } from '../../../data/carwashData'; */
 import { ArrowDownIcon } from '@heroicons/react/24/solid';
-import clsx from 'clsx';
 import { useCarwashes } from '../../../hooks/useCarwashes';
 import { useCityContext } from '../../../hooks/useCityContext';
 
-type FetchedCarwash = {
+export type FetchedCarwash = {
     id: number;
     name: string;
     location: string;
     url: string;
-}
+};
 
 const CARDWIDTHS = {
     SMALL: 152 + 8,
@@ -38,8 +37,7 @@ const getEdgeSlide = (totalSlides: number) => {
 };
 
 export default function IntroCarousel() {
-    const [currentSlide, setCurrentSlide] = useState(0);
-    const [shouldAnimate, setShouldAnimate] = useState(true);
+    const [currentSlide, setCurrentSlide] = useState(4);
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const { currentCity } = useCityContext();
     const {
@@ -49,7 +47,8 @@ export default function IntroCarousel() {
     } = useCarwashes(currentCity.name);
 
     if (isLoading) return <div>Загружаем данные по автомойкам</div>;
-    if (isError || !carwashes) return <div>Произошла ошибка, попробуйте позже</div>;
+    if (isError || !carwashes)
+        return <div>Произошла ошибка, попробуйте позже</div>;
 
     const totalSlides = carwashes?.length || 0;
     const swipeThreshold = 50;
@@ -59,10 +58,8 @@ export default function IntroCarousel() {
             const isNotLast = prev < getEdgeSlide(totalSlides);
 
             if (isNotLast) {
-                setShouldAnimate(true);
                 return prev + 1;
             } else {
-                setShouldAnimate(false);
                 return 0;
             }
         });
@@ -73,10 +70,8 @@ export default function IntroCarousel() {
             const isNotFirst = prev > 0;
 
             if (isNotFirst) {
-                setShouldAnimate(true);
                 return prev - 1;
             } else {
-                setShouldAnimate(false);
                 return getEdgeSlide(totalSlides);
             }
         });
@@ -109,11 +104,7 @@ export default function IntroCarousel() {
             className="overflow-x-clip -mx-10 md:-mx-28 relative"
         >
             <div
-                className={clsx(
-                    'flex items-center gap-2 sm:gap-4 md:gap-8',
-                    shouldAnimate &&
-                        'transition-transform duration-500 ease-in-out'
-                )}
+                className="flex items-center gap-2 sm:gap-4 md:gap-8 transition-transform duration-500 ease-in-out"
                 style={{
                     transform: `translateX(-${getOffset() * currentSlide}px)`,
                 }}
