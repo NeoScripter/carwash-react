@@ -8,7 +8,7 @@ const CARDWIDTHS = {
     SMALL: 152 + 8,
     MEDIUM: 194 + 16,
     LARGE: 300 + 32,
-}
+};
 
 const getOffset = () => {
     if (screen.width < 768) {
@@ -18,18 +18,28 @@ const getOffset = () => {
     } else {
         return CARDWIDTHS.LARGE;
     }
-}
+};
+
+const getEdgeSlide = (totalSlides: number) => {
+    const offset = getOffset();
+
+    const maxSlidesOnPage = Math.ceil(screen.width / offset);
+
+    return totalSlides - maxSlidesOnPage;
+};
 
 export default function IntroCarousel() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [shouldAnimate, setShouldAnimate] = useState(true);
+    const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
     const totalSlides = carwashData.length;
+    const swipeThreshold = 50;
 
     function increment() {
-        setCurrentSlide(prev => {
-            const isNotLast = (prev < totalSlides);
-            
+        setCurrentSlide((prev) => {
+            const isNotLast = prev < getEdgeSlide(totalSlides);
+
             if (isNotLast) {
                 setShouldAnimate(true);
                 return prev + 1;
@@ -41,22 +51,55 @@ export default function IntroCarousel() {
     }
 
     function decrement() {
-        setCurrentSlide(prev => {
-            const isNotFirst = (prev > 0);
-            
+        setCurrentSlide((prev) => {
+            const isNotFirst = prev > 0;
+
             if (isNotFirst) {
                 setShouldAnimate(true);
                 return prev - 1;
             } else {
                 setShouldAnimate(false);
-                return totalSlides - 1;
+                return getEdgeSlide(totalSlides);
             }
         });
     }
 
+    function handleTouchStart(e: React.TouchEvent) {
+        setTouchStartX(e.touches[0].clientX);
+    }
+
+    function handleTouchEnd(e: React.TouchEvent) {
+        if (touchStartX === null) return;
+        const touchEndX = e.changedTouches[0].clientX;
+        const diffX = touchStartX - touchEndX;
+
+        if (Math.abs(diffX) > swipeThreshold) {
+            if (diffX > 0) {
+                increment(); 
+            } else {
+                decrement(); 
+            }
+        }
+
+        setTouchStartX(null); 
+    }
+
     return (
-        <div className="overflow-x-clip -mx-10 md:-mx-28 relative">
-            <div className={clsx("flex items-center gap-2 sm:gap-4 md:gap-8", shouldAnimate && "transition-transform duration-500 ease-in-out")} style={{ transform: `translateX(-${getOffset() * currentSlide}px)` }}>
+        <div
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            className="overflow-x-clip -mx-10 md:-mx-28 relative"
+        >
+            <div
+                className={clsx(
+                    'flex items-center gap-2 sm:gap-4 md:gap-8',
+                    shouldAnimate &&
+                        'transition-transform duration-500 ease-in-out'
+                )}
+                style={{
+                    transform: `translateX(-${getOffset() * currentSlide}px)`,
+                }}
+            >
                 {carwashData.map((carwash) => (
                     <CarwashCard
                         key={carwash.id}
@@ -87,7 +130,10 @@ type SliderBtnProps = {
 
 function SliderBtn({ children, onClick }: SliderBtnProps) {
     return (
-        <button onClick={onClick} className="pointer-events-auto sm:text-xl md:text-3xl cursor-pointer size-9 sm:size-15 md:size-29 aspect-square rounded-full bg-gray-10 p-1 sm:p-2 md:p-4 shadow-carousel-btn">
+        <button
+            onClick={onClick}
+            className="pointer-events-auto sm:text-xl md:text-3xl cursor-pointer size-9 sm:size-15 md:size-29 aspect-square rounded-full bg-gray-10 p-1 sm:p-2 md:p-4 shadow-carousel-btn"
+        >
             {children}
         </button>
     );
