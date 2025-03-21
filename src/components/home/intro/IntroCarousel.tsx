@@ -1,8 +1,17 @@
 import { useState } from 'react';
 import CarwashCard from './CarwashCard';
-import { carwashData } from '../../../data/carwashData';
+/* import { carwashData } from '../../../data/carwashData'; */
 import { ArrowDownIcon } from '@heroicons/react/24/solid';
 import clsx from 'clsx';
+import { useCarwashes } from '../../../hooks/useCarwashes';
+import { useCityContext } from '../../../hooks/useCityContext';
+
+type FetchedCarwash = {
+    id: number;
+    name: string;
+    location: string;
+    url: string;
+}
 
 const CARDWIDTHS = {
     SMALL: 152 + 8,
@@ -32,8 +41,16 @@ export default function IntroCarousel() {
     const [currentSlide, setCurrentSlide] = useState(0);
     const [shouldAnimate, setShouldAnimate] = useState(true);
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
+    const { currentCity } = useCityContext();
+    const {
+        data: carwashes,
+        isLoading,
+        isError,
+    } = useCarwashes(currentCity.name);
 
-    const totalSlides = carwashData.length;
+    if (isError || !carwashes) return <div>Error loading carwashes</div>;
+
+    const totalSlides = carwashes?.length || 0;
     const swipeThreshold = 50;
 
     function increment() {
@@ -75,13 +92,13 @@ export default function IntroCarousel() {
 
         if (Math.abs(diffX) > swipeThreshold) {
             if (diffX > 0) {
-                increment(); 
+                increment();
             } else {
-                decrement(); 
+                decrement();
             }
         }
 
-        setTouchStartX(null); 
+        setTouchStartX(null);
     }
 
     return (
@@ -100,13 +117,14 @@ export default function IntroCarousel() {
                     transform: `translateX(-${getOffset() * currentSlide}px)`,
                 }}
             >
-                {carwashData.map((carwash) => (
+                {carwashes.map((carwash: FetchedCarwash) => (
                     <CarwashCard
                         key={carwash.id}
-                        imgPath={carwash.imgPath}
-                        rating={carwash.rating}
+                        imgPath={carwash.url}
+                        rating={4}
                         name={carwash.name}
-                        address={carwash.address}
+                        address={carwash.location}
+                        isLoading={isLoading}
                     />
                 ))}
             </div>

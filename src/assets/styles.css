@@ -44,3 +44,21 @@
 .section-padding {
     @apply px-10 md:px-28;
 }
+
+.skeleton {
+    border-radius: inherit;
+    animation: loading 1.5s infinite ease-in-out;
+    color: transparent;
+}
+
+@keyframes loading {
+    0% {
+        background-color: #f0f0f0;
+    }
+    50% {
+        background-color: #b1abab;
+    }
+    100% {
+        background-color: #f0f0f0;
+    }
+}
