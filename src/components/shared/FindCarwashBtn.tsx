@@ -12,7 +12,7 @@ export default function FindCarwashBtn({ className }: FindCarwashBtnProps) {
             className={clsx("btn-primary bg-yellow-50 border-yellow-20", className)}
         >
             Мойка рядом
-            <MagnifyingGlassIcon className="size-4.5 shrink-0" />
+            <MagnifyingGlassIcon className="size-[1.25em] shrink-0" />
         </Link>
     );
 }
