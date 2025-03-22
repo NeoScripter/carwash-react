@@ -9,7 +9,7 @@ import { useCityContext } from '../../../hooks/useCityContext';
 export default function HeroNavigationBar() {
     const { openCityList, currentCity } = useCityContext();
     return (
-        <header className="py-12 md:pt-20 md:pb-12 text-gray-50">
+        <header className="py-12 md:pt-20 md:pb-12 text-gray-50 sticky top-0 z-30">
             <nav>
                 <div className="flex items-center justify-around sm:justify-between">
                     <button

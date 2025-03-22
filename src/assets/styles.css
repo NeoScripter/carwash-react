@@ -24,8 +24,8 @@
         rgba(255, 255, 255, 1) 100%
     );
 
-    --shadow-logo: inset -3px -3px 0px rgba(255, 255, 255, 0.7),
-        inset 3px 3px 0px rgba(0, 0, 0, 0.7);
+    --shadow-logo: inset -2px -2px 0px rgba(255, 255, 255, 0.7),
+        inset 2px 2px 0px rgba(0, 0, 0, 0.7);
     --shadow-step-card: inset 2px -2px 0px rgba(255, 255, 255, 0.4),
         inset -2px 2px 0px rgba(0, 0, 0, 0.4);
     --shadow-carousel-btn: inset 0.08em 0.08em 0em rgba(255, 255, 255, 1),

@@ -6,12 +6,13 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { loginUser } from '../api/auth';
+import { AxiosError } from 'axios';
 
 const loginSchema = z.object({
     telephone: z
         .string()
-        .regex(/^\+?\d{10,15}$/, 'Введите корректный номер телефона'),
-    password: z.string().min(6, 'Пароль должен быть не менее 6 символов'),
+        .regex(/^\+?\d{10,15}$/, 'Введите правильный номер телефона'),
+    password: z.string(),
 });
 
 type LoginFormInputs = z.infer<typeof loginSchema>;
@@ -32,9 +33,9 @@ export default function Login() {
             // TODO: Handle successful login (e.g., redirect, store token)
             console.log('Login success:', data);
         },
-        onError: (error: any) => {
-            if (error.response?.data?.detail) {
-                setError('root', { message: error.response.data.detail });
+        onError: (error: unknown) => {
+            if (error instanceof AxiosError && error.response) {
+                setError('root', { message: 'Данный пользователь не зарегистрирован.' });
             } else {
                 setError('root', { message: 'Ошибка входа. Попробуйте позже.' });
             }
@@ -80,7 +81,7 @@ export default function Login() {
                     <p className="text-red-500 mb-4">{errors.root.message}</p>
                 )}
 
-                <PrimaryBtn /* type="submit" disabled={mutation.isPending} */>
+                <PrimaryBtn type="submit" /* disabled={mutation.isPending} */>
                     {mutation.isPending ? 'Вход...' : 'Войти'}
                 </PrimaryBtn>
             </form>
