@@ -32,7 +32,7 @@ export default function Home() {
                 <HeroBtmWhiteArrow />
             </section>
 
-            <section className="section-padding md:relative mb-5">
+            <section className="section-padding md:relative mb-25 sm:mb-12.5 md:mb-20">
                 <IntroHeader />
 
                 <IntroSteps />

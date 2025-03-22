@@ -19,7 +19,7 @@ export default function CityPickerModal() {
             >
                 <div
                     onClick={(e) => e.stopPropagation()}
-                    className="bg-white max-w-127 w-full rounded-2xl p-4 text-black-20 h-149 overflow-y-auto"
+                    className="bg-white max-w-127 w-full rounded-2xl p-4 text-black-20 h-100 md:h-149 overflow-y-auto"
                 >
                     <Header onClose={closeCityList} />
                     <SearchInput value={searchTerm} onChange={setSearchTerm} />
