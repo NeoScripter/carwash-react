@@ -20,7 +20,7 @@ export default function HeroNavigationBar() {
 
                         {currentCity.ru_name}
                     </button>
-                    <FindCarwashBtn className='absolute -bottom-15 sm:static' />
+                    <FindCarwashBtn className='absolute -bottom-15 sm:static text-black-20' />
                     <Link
                         to="/login"
                         className="btn-primary bg-gray-30 border-gray-20"

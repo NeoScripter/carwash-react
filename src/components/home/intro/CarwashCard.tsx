@@ -15,7 +15,7 @@ export default function CarwashCard({
     const [isLoading, setIsLoading] = useState(true);
 
     return (
-        <div className="rounded-(--card-radius) flex flex-col p-(--card-padding) [--card-padding:--spacing(3)] sm:[--card-padding:--spacing(4)] [--card-radius:var(--radius-4xl)] gap-2 md:gap-4 border border-gray-400 bg-gray-10/50 w-38 sm:w-48.5 md:w-75 shrink-0 text-xs sm:text-sm md:text-xl text-white text-center">
+        <div className="rounded-(--card-radius) flex flex-col p-(--card-padding) [--card-padding:--spacing(3)] sm:[--card-padding:--spacing(4)] [--card-radius:var(--radius-4xl)] gap-2 md:gap-4 border border-gray-400 bg-gray-10/50 w-38 sm:w-48.5 md:w-75 shrink-0 text-xs sm:text-sm md:text-xl text-white text-center backdrop-blur-sm">
             <div className="overflow-clip relative aspect-square rounded-[calc(var(--card-radius)-var(--card-padding))]">
                 <img
                     onLoad={() => setIsLoading(false)}

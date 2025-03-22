@@ -175,7 +175,7 @@ function SliderBtn({ children, onClick }: SliderBtnProps) {
     return (
         <button
             onClick={onClick}
-            className="pointer-events-auto sm:text-xl md:text-3xl cursor-pointer size-9 sm:size-15 md:size-29 aspect-square rounded-full bg-gray-10 p-1 sm:p-2 md:p-4 shadow-carousel-btn"
+            className="pointer-events-auto sm:text-xl md:text-3xl cursor-pointer size-9 sm:size-15 md:size-29 aspect-square rounded-full bg-gray-10 p-1 sm:p-2 md:p-4 shadow-carousel-btn backdrop-blur-sm"
         >
             {children}
         </button>

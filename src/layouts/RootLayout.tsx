@@ -5,7 +5,6 @@ import CityPickerModal from '../components/home/cityPickerModal/CityPickerModal'
 import FooterLink from '../components/shared/FooterLink';
 import telegram from '../assets/images/shared/Telegram.webp';
 import vk from '../assets/images/shared/VK.webp';
-import footerPattern from '../assets/images/home/home-btm-md.webp';
 
 
 
@@ -17,7 +16,7 @@ export function RootLayout() {
                 <Outlet />
             </div>
 
-            <footer className='px-7 py-5 md:px-22 md:py-40 relative'>
+            <footer className='px-7 py-12 md:px-22 md:py-20 relative'>
                 <nav className='mb-10'>
                     <ul className='flex flex-col items-center gap-5 md:gap-12 sm:flex-row sm:flex-wrap sm:justify-center text-xs sm:text-sm md:text-base'>
                         <li>
@@ -32,9 +31,9 @@ export function RootLayout() {
                     </ul>
                 </nav>
 
-                <span className='absolute hidden md:block inset-0 bottom-20 -z-10'>
+              {/*   <span className='absolute hidden md:block inset-0 bottom-20 -z-10'>
                     <img src={footerPattern} alt="" className='w-full h-full' />
-                </span>
+                </span> */}
                 
                 <nav className='mb-4 sm:mb-6 md:mb-10'>
                     <ul className='flex items-center justify-center gap-11'>

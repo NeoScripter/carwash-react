@@ -3,7 +3,7 @@ import logo from '../../../assets/images/home/logo.webp';
 
 export default function HeroBrandLogo() {
     return (
-        <HeroBubble className="flex md:max-w-1/2">
+        <HeroBubble className="flex md:max-w-1/2 backdrop-blur-sm">
             <img
                 src={logo}
                 alt="Chisto.drive"

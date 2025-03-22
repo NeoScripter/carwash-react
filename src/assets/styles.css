@@ -2,6 +2,7 @@
 
 @theme {
     --font-sans: 'Actay', 'system-ui', 'sans-serif';
+    --font-logo: 'Syncopate';
 
     --breakpoint-sm: 48.75rem;
     --breakpoint-md: 90rem;
@@ -34,7 +35,7 @@
 }
 
 .btn-primary {
-    @apply w-max border flex items-center gap-2 py-1.5 px-4 rounded-full transition-colors duration-300 hover:opacity-90 uppercase cursor-pointer;
+    @apply w-max border flex items-center gap-2 py-[0.35em] px-[1em] rounded-full transition-colors duration-300 hover:opacity-90 uppercase cursor-pointer;
 }
 
 .input-field {
